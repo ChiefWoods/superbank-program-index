@@ -1,0 +1,28 @@
+{
+  "testType": "validate-get-transactions-for-address-edge-cases",
+  "timestamp": "2026-07-02T15:56:48.416Z",
+  "config": {
+    "rpcUrl": "http://localhost:8899",
+    "vus": 5,
+    "duration": "30s",
+    "addressPoolSize": 1000,
+    "maxSupportedTransactionVersion": 0
+  },
+  "metrics": {
+    "checks": {
+      "rate": 1,
+      "passed": 16623,
+      "failed": 0
+    },
+    "edgeCases": {
+      "run": 16623,
+      "passed": 16623,
+      "failed": 0,
+      "skipped": 0,
+      "passRate": 1,
+      "invalidParamsReturned": 7388,
+      "paginationPagesCompared": 1847,
+      "tokenOwnerCasesSkipped": 0
+    }
+  }
+}

@@ -1,8 +1,8 @@
 k6 suite results summary (2026-07-02)
 
 Target: http://localhost:8899
-Runs: 6 JSON result files in this directory
-Outcome: all runs completed with 0 failed requests and 0 RPC/HTTP/timeout errors
+Runs: 7 JSON result files in this directory, plus pid-81470-summary.txt terminal transcript
+Outcome: all load/stress runs completed with 0 failed requests and 0 RPC/HTTP/timeout errors; the edge-case validation run completed with 0 failed checks
 
 getSignaturesForAddress (GSFA)
   basic (05:55)  vus=5  30s   21,414 reqs   avg 6.8ms   p95 11.5ms   max 244ms   -> gsfa-basic-2026-07-02T05-55-11Z.json
@@ -14,8 +14,13 @@ getSignatureStatuses
   basic (06:11)  vus=5  30s  batch=10     14,722 reqs   avg 9.9ms   p95 16.3ms   max 152ms   -> sigstatus-basic-2026-07-02T06-11-11-456Z.json
   stress (06:14) ramp to high load       68,564 reqs   avg 219ms   p95 534ms    max 1653ms  -> sigstatus-stress-2026-07-02T06-14-16-208Z.json
 
+getTransactionsForAddress edge-case validation
+  edge cases (15:56) vus=5 30s  1,847 iterations  16,623 checks passed  0 failed  -> tfa-edge-cases-2026-07-02T15-56-48-416Z.json
+  covered: sortOrder=asc, paginationToken paging, invalid beforeSlot/untilSlot alias conflicts, full details with maxSupportedTransactionVersion=0, tokenAccounts=all, tokenAccounts=balanceChanged
+
 Takeaways
 - Basic workloads for both RPC methods stay under ~11ms average and ~21ms p95.
 - The 10-minute GSFA soak held steady at ~28ms average across 419k requests.
 - Stress and spike runs show the expected latency jump (avg ~190-233ms, p95 ~467-675ms) with no request failures.
 - GSFA responses averaged ~8.6 signatures/request (limit 25); sigstatus batches returned ~10 rows/request.
+- The getTransactionsForAddress edge-case validation passed all 16,623 checks, including 7,388 expected invalid-params responses for alias conflicts.

@@ -1,6 +1,7 @@
 # Superbank Program Index
 
 Assignment requirements:
+
 - stand up a local topology
 - backfill a bounded devnet slice
 - load-test `getSignaturesForAddress` and `getSignatureStatuses` using k6 suites
@@ -46,14 +47,16 @@ LIMIT 1000" > tests/k6/data/pools/devnet-signatures.txt
 
 Saved result artifacts are under `results/`: six JSON run files plus `summary.txt`.
 
-| Method                    | Scenario | Requests | Failures | Avg latency | p95 latency | Max latency | Artifact |
-| ------------------------- | -------- | -------- | -------- | ----------- | ----------- | ----------- | -------- |
-| `getSignaturesForAddress` | basic    | 21,414   | 0        | 6.80 ms     | 11.55 ms    | 243.73 ms   | `gsfa-basic-2026-07-02T05-55-11Z.json` |
-| `getSignaturesForAddress` | soak     | 419,543  | 0        | 28.32 ms    | 62.34 ms    | 1549.18 ms  | `gsfa-soak-2026-07-02T05-54-09Z.json` |
-| `getSignaturesForAddress` | stress   | 78,253   | 0        | 191.47 ms   | 467.35 ms   | 1183.60 ms  | `gsfa-stress-2026-07-02T06-08-57-100Z.json` |
-| `getSignaturesForAddress` | spike    | 26,027   | 0        | 233.18 ms   | 675.27 ms   | 1407.32 ms  | `gsfa-spike-2026-07-02T06-10-30-595Z.json` |
-| `getSignatureStatuses`    | basic    | 14,722   | 0        | 9.91 ms     | 16.34 ms    | 152.47 ms   | `sigstatus-basic-2026-07-02T06-11-11-456Z.json` |
+
+| Method                    | Scenario | Requests | Failures | Avg latency | p95 latency | Max latency | Artifact                                         |
+| ------------------------- | -------- | -------- | -------- | ----------- | ----------- | ----------- | ------------------------------------------------ |
+| `getSignaturesForAddress` | basic    | 21,414   | 0        | 6.80 ms     | 11.55 ms    | 243.73 ms   | `gsfa-basic-2026-07-02T05-55-11Z.json`           |
+| `getSignaturesForAddress` | soak     | 419,543  | 0        | 28.32 ms    | 62.34 ms    | 1549.18 ms  | `gsfa-soak-2026-07-02T05-54-09Z.json`            |
+| `getSignaturesForAddress` | stress   | 78,253   | 0        | 191.47 ms   | 467.35 ms   | 1183.60 ms  | `gsfa-stress-2026-07-02T06-08-57-100Z.json`      |
+| `getSignaturesForAddress` | spike    | 26,027   | 0        | 233.18 ms   | 675.27 ms   | 1407.32 ms  | `gsfa-spike-2026-07-02T06-10-30-595Z.json`       |
+| `getSignatureStatuses`    | basic    | 14,722   | 0        | 9.91 ms     | 16.34 ms    | 152.47 ms   | `sigstatus-basic-2026-07-02T06-11-11-456Z.json`  |
 | `getSignatureStatuses`    | stress   | 68,564   | 0        | 218.54 ms   | 534.44 ms   | 1653.35 ms  | `sigstatus-stress-2026-07-02T06-14-16-208Z.json` |
+
 
 The GSFA basic run returned an average of `8.59` signatures per request with a configured limit of `25`. The status basic run returned an average of `9.96` rows per request with a batch size of `10`. All saved k6 summaries reported `0` HTTP errors, `0` RPC errors, and `0` timeouts.
 
@@ -72,6 +75,37 @@ Under GSFA stress and spike traffic, tail latency increased but failures stayed 
 Comparing methods, the basic runs are close: GSFA averaged `6.80 ms`, while `getSignatureStatuses` averaged `9.91 ms`. Under stress, both methods moved into the same latency band: GSFA averaged `191.47 ms`, and `getSignatureStatuses` averaged `218.54 ms`. That is expected because both are backed by purpose-built views, but `getSignatureStatuses` performs batched signature lookups and returns status data for up to `10` signatures per request.
 
 The saved summaries have two measurement limitations. First, the generated JSON reports `p99: 0`, so p99 should not be used for analysis from these artifacts. The report should rely on average, p95, and max latency instead. Second, CPU, memory, and ClickHouse server-side timing were not captured in these JSON summaries, so the results prove local functional stability and request latency, but not full system capacity. See `results/summary.txt` for a brief rollup of all runs.
+
+### getTransactionsForAddress Edge-Case Validation
+
+Focused validation scenario added for the beta `getTransactionsForAddress` method and ran against the local Superbank RPC server with the generated devnet address pool:
+
+```bash
+k6 run tests/k6/scenarios/validation/superbank-rpc-validate-get-transactions-for-address-edge-cases.js \
+  -e RPC_URL=http://localhost:8899 \
+  -e ADDRESS_FILE=./tests/k6/data/pools/devnet-addresses.txt \
+  -e TFA_MAX_SUPPORTED_TX_VERSION=0
+```
+
+The structured summary is saved as `results/tfa-edge-cases-2026-07-02T15-56-48-416Z.json`.
+
+
+| Metric                                        | Value                       |
+| --------------------------------------------- | --------------------------- |
+| Timestamp                                     | `2026-07-02T15:56:48.416Z`  |
+| VUs / duration                                | `5` VUs for `30s`           |
+| Completed iterations                          | `1,847`                     |
+| Checks                                        | `16,623` passed, `0` failed |
+| Edge cases run                                | `16,623`                    |
+| Edge cases passed                             | `16,623`                    |
+| Edge cases failed                             | `0`                         |
+| Edge cases skipped                            | `0`                         |
+| Invalid alias combinations returning `-32602` | `7,388`                     |
+| Pagination pages compared                     | `1,847`                     |
+| Token-owner cases skipped                     | `0`                         |
+
+
+This run specifically covered `sortOrder=asc`, `paginationToken` across multiple pages, invalid `beforeSlot`/`untilSlot` alias conflicts with `filters.slot`, `transactionDetails=full` with `maxSupportedTransactionVersion=0`, and both `filters.tokenAccounts=all` and `filters.tokenAccounts=balanceChanged`. The result is a clean validation pass for the edge cases.
 
 ### Conclusion
 
