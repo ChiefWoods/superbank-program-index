@@ -1,0 +1,49 @@
+{
+  "testType": "stress",
+  "timestamp": "2026-07-02T06:08:57.100Z",
+  "config": {
+    "rpcUrl": "http://localhost:8899",
+    "limit": 25,
+    "addressPoolSize": 1000
+  },
+  "metrics": {
+    "requests": {
+      "total": 78253,
+      "successful": 78253,
+      "failed": 0
+    },
+    "latency": {
+      "avg": 191.46959854574382,
+      "p95": 467.3508,
+      "p99": 0,
+      "max": 1183.596
+    },
+    "errors": {
+      "http": 0,
+      "rpc": 0,
+      "timeout": 0
+    },
+    "signatures": {
+      "avg": 8.67270264398809,
+      "max": 25
+    },
+    "responseSize": {
+      "avg": 1946.3267222981867,
+      "max": 5555
+    },
+    "downstream": {
+      "rowsReturned": {
+        "avg": 8.67270264398809,
+        "p95": 25,
+        "p99": 0,
+        "max": 25
+      },
+      "dataReadBytes": {
+        "avg": 1266.5362733697111,
+        "p95": 2912,
+        "p99": 0,
+        "max": 3468
+      }
+    }
+  }
+}

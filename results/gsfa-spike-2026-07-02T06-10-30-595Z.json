@@ -1,0 +1,49 @@
+{
+  "testType": "spike",
+  "timestamp": "2026-07-02T06:10:30.595Z",
+  "config": {
+    "rpcUrl": "http://localhost:8899",
+    "limit": 25,
+    "addressPoolSize": 1000
+  },
+  "metrics": {
+    "requests": {
+      "total": 26027,
+      "successful": 26027,
+      "failed": 0
+    },
+    "latency": {
+      "avg": 233.1847378107345,
+      "p95": 675.27,
+      "p99": 0,
+      "max": 1407.321
+    },
+    "errors": {
+      "http": 0,
+      "rpc": 0,
+      "timeout": 0
+    },
+    "signatures": {
+      "avg": 8.603258154992892,
+      "max": 25
+    },
+    "responseSize": {
+      "avg": 1931.7234410419949,
+      "max": 5555
+    },
+    "downstream": {
+      "rowsReturned": {
+        "avg": 8.603258154992892,
+        "p95": 25,
+        "p99": 0,
+        "max": 25
+      },
+      "dataReadBytes": {
+        "avg": 1258.0342336804088,
+        "p95": 2912,
+        "p99": 0,
+        "max": 3468
+      }
+    }
+  }
+}

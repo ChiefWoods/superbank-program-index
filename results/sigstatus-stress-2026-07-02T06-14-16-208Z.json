@@ -1,0 +1,46 @@
+{
+  "testType": "stress-get-signature-statuses",
+  "timestamp": "2026-07-02T06:14:16.208Z",
+  "config": {
+    "rpcUrl": "http://localhost:8899",
+    "signaturePoolSize": 1000,
+    "batchSize": 10,
+    "searchTransactionHistory": null
+  },
+  "metrics": {
+    "requests": {
+      "total": 68564,
+      "successful": 68564,
+      "failed": 0
+    },
+    "latency": {
+      "avg": 218.5359478881022,
+      "p95": 534.4402,
+      "p99": 0,
+      "max": 1653.35
+    },
+    "errors": {
+      "http": 0,
+      "rpc": 0,
+      "timeout": 0
+    },
+    "responseSize": {
+      "avg": 1237.1240155183477,
+      "max": 1721
+    },
+    "downstream": {
+      "rowsReturned": {
+        "avg": 9.954188787118605,
+        "p95": 10,
+        "p99": 0,
+        "max": 10
+      },
+      "dataReadBytes": {
+        "avg": 844.9294673589638,
+        "p95": 929,
+        "p99": 0,
+        "max": 1116
+      }
+    }
+  }
+}

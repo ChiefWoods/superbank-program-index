@@ -1,0 +1,51 @@
+{
+  "testType": "basic",
+  "timestamp": "2026-07-02T05:55:11.147Z",
+  "config": {
+    "rpcUrl": "http://localhost:8899",
+    "limit": 25,
+    "vus": 5,
+    "duration": "30s",
+    "addressPoolSize": 1000
+  },
+  "metrics": {
+    "requests": {
+      "total": 21414,
+      "successful": 21414,
+      "failed": 0
+    },
+    "latency": {
+      "avg": 6.798315401139427,
+      "p95": 11.548699999999998,
+      "p99": 0,
+      "max": 243.733
+    },
+    "errors": {
+      "http": 0,
+      "rpc": 0,
+      "timeout": 0
+    },
+    "signatures": {
+      "avg": 8.590828429999066,
+      "max": 25
+    },
+    "responseSize": {
+      "avg": 1929.8826468665359,
+      "max": 5555
+    },
+    "downstream": {
+      "rowsReturned": {
+        "avg": 8.590828429999066,
+        "p95": 25,
+        "p99": 0,
+        "max": 25
+      },
+      "dataReadBytes": {
+        "avg": 1257.3770897543664,
+        "p95": 2912,
+        "p99": 0,
+        "max": 3468
+      }
+    }
+  }
+}
